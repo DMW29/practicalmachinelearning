@@ -1,0 +1,364 @@
+Using randomForest() function to build classe prediction model. Cross-validation is used by creating three different training and test set samples (so set.seed() is not used to create the data set splits).
+
+RUN1
+ntree      OOB      1      2      3      4      5
+  100:   1.09%  0.22%  1.32%  2.01%  1.81%  0.69%
+  200:   1.08%  0.19%  1.21%  2.01%  2.01%  0.64%
+  300:   1.00%  0.19%  0.88%  2.01%  1.94%  0.58%
+  400:   1.07%  0.19%  1.21%  2.07%  2.01%  0.52%
+  500:   1.00%  0.07%  1.15%  2.01%  1.88%  0.52%
+
+> treeset.randomForest(modRF, n=1, root=1, format = "R")[1:20]
+ [1] "if (roll_dumbbell <= 63.196143865)" "if (roll_forearm <= 126.5)"        
+ [3] "if (magnet_forearm_x <= -21.5)"     "if (yaw_belt <= 168.5)"            
+ [5] "if (roll_forearm <= 45.65)"         "if (gyros_belt_x <= 0.25)"         
+ [7] "if (pitch_belt <= 15.35)"           "if (accel_dumbbell_y <= -39.5)"    
+ [9] "if (accel_belt_y <= 58.5)"          "if (magnet_dumbbell_z <= 7)"       
+[11] "if (accel_forearm_z <= -226.5)"     "Result <- B"                       
+[13] "else"                               "if (magnet_belt_x <= 4)"           
+[15] "Result <- C"                        "else"                              
+[17] "if (accel_dumbbell_z <= 6)"         "Result <- E"                       
+[19] "else"                               "if (magnet_forearm_x <= -404.5)"   
+
+> modRF
+
+Call:
+ randomForest(formula = factor(classe) ~ ., data = mytrainraw,      importance = TRUE, do.trace = 100) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 6
+
+        OOB estimate of  error rate: 1% or 0.01
+Confusion matrix:
+     A    B    C    D    E  class.error
+A 2677    1    0    0    1 0.0007465472
+B   14 1802    7    0    0 0.0115194734
+C    0   27 1610    6    0 0.0200852100
+D    0    0   26 1515    3 0.0187823834
+E    0    0    3    6 1723 0.0051963048
+
+> confusionMatrix(predRF, mytestraw$classe)
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 1114    4    0    0    0
+         B    2  752    4    0    0
+         C    0    2  678   16    1
+         D    0    1    2  627    4
+         E    0    0    0    0  716
+
+Overall Statistics
+                                          
+               Accuracy : 0.9908          
+                 95% CI : (0.9873, 0.9936)
+    No Information Rate : 0.2845          
+    P-Value [Acc > NIR] : < 2.2e-16       
+                                          
+                  Kappa : 0.9884          
+ Mcnemar's Test P-Value : NA              
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.9982   0.9908   0.9912   0.9751   0.9931
+Specificity            0.9986   0.9981   0.9941   0.9979   1.0000
+Pos Pred Value         0.9964   0.9921   0.9727   0.9890   1.0000
+Neg Pred Value         0.9993   0.9978   0.9981   0.9951   0.9984
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2840   0.1917   0.1728   0.1598   0.1825
+Detection Prevalence   0.2850   0.1932   0.1777   0.1616   0.1825
+Balanced Accuracy      0.9984   0.9944   0.9927   0.9865   0.9965
+
+OOS Error = 1-0.9908 = 0.0092
+> OOS_errRateRF
+[1] 0.009176651
+This means out of 20 samples 0.184 will be incorrect
+
+> predBlind
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+Levels: A B C D E
+
+RUN2=======================================================
+
+ntree      OOB      1      2      3      4      5
+  100:   0.83%  0.09%  1.10%  1.27%  1.55%  0.65%
+  200:   0.79%  0.06%  1.10%  1.17%  1.55%  0.55%
+  300:   0.76%  0.03%  1.05%  0.97%  1.66%  0.55%
+  400:   0.75%  0.03%  1.10%  0.93%  1.55%  0.60%
+  500:   0.70%  0.03%  0.83%  0.97%  1.50%  0.60%
+
+> treeset.randomForest(modRF, n=500, root=1, format = "R")[1:20]
+ [1] "if (magnet_arm_x <= 60.5)"          "if (roll_belt <= 131.5)"           
+ [3] "if (accel_dumbbell_x <= 36.5)"      "if (gyros_forearm_z <= -0.22)"     
+ [5] "if (roll_arm <= -58.2)"             "Result <- A"                       
+ [7] "else"                               "if (roll_arm <= 98.7)"             
+ [9] "if (magnet_forearm_x <= -730.5)"    "if (roll_dumbbell <= 53.128697495)"
+[11] "if (gyros_belt_x <= 0.42)"          "Result <- D"                       
+[13] "else"                               "Result <- E"                       
+[15] "else"                               "Result <- E"                       
+[17] "else"                               "if (magnet_belt_z <= -501)"        
+[19] "Result <- D"                        "else"                              
+
+> modRF
+
+Call:
+ randomForest(formula = factor(classe) ~ ., data = mytrainraw,      importance = TRUE, do.trace = 100) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 6
+
+        OOB estimate of  error rate: 0.63%
+Confusion matrix:
+     A    B    C    D    E class.error
+A 3343    5    0    0    0 0.001493429
+B   11 2258   10    0    0 0.009214568
+C    1   12 2037    4    0 0.008276534
+D    0    0   23 1906    1 0.012435233
+E    0    0    1    6 2158 0.003233256
+
+> confusionMatrix(predRF, mytestraw$classe)
+Confusion Matrix and Statistics
+
+          Reference
+Prediction    A    B    C    D    E
+         A 2229    2    0    0    0
+         B    2 1514    9    0    0
+         C    0    2 1353   14    0
+         D    0    0    6 1271    6
+         E    1    0    0    1 1436
+
+Overall Statistics
+                                         
+               Accuracy : 0.9945         
+                 95% CI : (0.9926, 0.996)
+    No Information Rate : 0.2845         
+    P-Value [Acc > NIR] : < 2.2e-16      
+                                         
+                  Kappa : 0.9931         
+ Mcnemar's Test P-Value : NA             
+
+Statistics by Class:
+
+                     Class: A Class: B Class: C Class: D Class: E
+Sensitivity            0.9987   0.9974   0.9890   0.9883   0.9958
+Specificity            0.9996   0.9983   0.9975   0.9982   0.9997
+Pos Pred Value         0.9991   0.9928   0.9883   0.9906   0.9986
+Neg Pred Value         0.9995   0.9994   0.9977   0.9977   0.9991
+Prevalence             0.2845   0.1935   0.1744   0.1639   0.1838
+Detection Rate         0.2841   0.1930   0.1724   0.1620   0.1830
+Detection Prevalence   0.2843   0.1944   0.1745   0.1635   0.1833
+Balanced Accuracy      0.9991   0.9978   0.9933   0.9933   0.9978
+
+> OOS_errRateRF
+[1] 0.0054805
+
+> predBlind
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+Levels: A B C D E
+
+RUN3========================================================
+
+ntree      OOB      1      2      3      4      5
+  100:   0.88%  0.12%  1.14%  1.85%  1.40%  0.42%
+  200:   0.71%  0.09%  0.92%  1.46%  1.19%  0.32%
+  300:   0.70%  0.09%  0.79%  1.46%  1.24%  0.37%
+  400:   0.69%  0.09%  0.83%  1.36%  1.19%  0.37%
+  500:   0.69%  0.09%  0.75%  1.36%  1.30%  0.37%
+
+> treeset.randomForest(modRF, n=500, root=1, format = "R")[1:20]
+ [1] "if (yaw_arm <= -115.5)"           "if (magnet_belt_z <= -350.5)"    
+ [3] "if (magnet_forearm_y <= 728)"     "if (magnet_dumbbell_y <= -502.5)"
+ [5] "if (pitch_forearm <= 44.5)"       "if (accel_arm_z <= 114.5)"       
+ [7] "if (yaw_forearm <= 6)"            "Result <- B"                     
+ [9] "else"                             "Result <- C"                     
+[11] "else"                             "Result <- E"                     
+[13] "else"                             "Result <- B"                     
+[15] "else"                             "if (magnet_arm_y <= 366)"        
+[17] "Result <- C"                      "else"                            
+[19] "Result <- B"    
+
+> modRF
+
+Call:
+ randomForest(formula = factor(classe) ~ ., data = mytrainraw,      importance = TRUE, do.trace = 100) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 6
+
+        OOB estimate of  error rate: 0.69%
+Confusion matrix:
+     A    B    C    D    E  class.error
+A 3345    1    1    0    1 0.0008960573
+B   13 2262    4    0    0 0.0074594120
+C    0   22 2026    6    0 0.0136319377
+D    1    0   23 1905    1 0.0129533679
+E    0    0    2    6 2157 0.0036951501
+
+> OOS_errRateRF
+[1] 0.006372674
+
+> predBlind
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+Levels: A B C D E
+
+RUN4=======================================================
+
+ntree      OOB      1      2      3      4      5
+  100:   0.85%  0.18%  0.97%  1.31%  1.76%  0.51%
+  200:   0.69%  0.15%  0.75%  0.93%  1.55%  0.46%
+  300:   0.59%  0.12%  0.57%  0.97%  1.24%  0.42%
+  400:   0.59%  0.15%  0.53%  0.97%  1.24%  0.42%
+  500:   0.55%  0.12%  0.57%  0.88%  1.09%  0.42%
+
+> treeset.randomForest(modRF, n=500, root=1, format = "R")[1:20]
+ [1] "if (roll_belt <= 130.5)"         "if (pitch_forearm <= -33.95)"   
+ [3] "if (gyros_arm_x <= 2.535)"       "if (pitch_forearm <= -35.35)"   
+ [5] "Result <- A"                     "else"                           
+ [7] "if (accel_dumbbell_z <= 16)"     "Result <- A"                    
+ [9] "else"                            "if (roll_arm <= 41.95)"         
+[11] "Result <- A"                     "else"                           
+[13] "Result <- B"                     "else"                           
+[15] "if (accel_dumbbell_x <= -144.5)" "Result <- A"                    
+[17] "else"                            "Result <- B"                    
+[19] "else"                            "if (gyros_belt_z <= 0.06)" 
+
+> modRF
+
+Call:
+ randomForest(formula = factor(classe) ~ ., data = mytrainraw,      importance = TRUE, do.trace = 100) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 6
+
+        OOB estimate of  error rate: 0.55%
+Confusion matrix:
+     A    B    C    D    E class.error
+A 3344    3    0    0    1 0.001194743
+B   12 2266    1    0    0 0.005704256
+C    0   15 2036    3    0 0.008763389
+D    0    0   20 1909    1 0.010880829
+E    0    0    1    8 2156 0.004157044
+
+[1] 0.006755034
+
+> predBlind
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+
+RUN5=======================================================
+
+ntree      OOB      1      2      3      4      5
+  100:   0.77%  0.15%  1.10%  1.22%  1.50%  0.32%
+  200:   0.71%  0.15%  0.97%  1.17%  1.19%  0.46%
+  300:   0.71%  0.15%  0.88%  1.22%  1.24%  0.46%
+  400:   0.65%  0.06%  0.79%  1.07%  1.30%  0.42%
+  500:   0.64%  0.06%  0.79%  1.07%  1.24%  0.42%
+
+> treeset.randomForest(modRF, n=500, root=1, format = "R")[1:20]
+ [1] "if (accel_dumbbell_x <= 38.5)"    "if (magnet_belt_z <= -441.5)"    
+ [3] "if (roll_arm <= 64.45)"           "Result <- E"                     
+ [5] "else"                             "if (magnet_dumbbell_z <= 91)"    
+ [7] "Result <- E"                      "else"                            
+ [9] "if (gyros_arm_y <= -1.3)"         "if (magnet_dumbbell_x <= -520.5)"
+[11] "Result <- D"                      "else"                            
+[13] "if (pitch_belt <= 1.295)"         "Result <- C"                     
+[15] "else"                             "Result <- B"                     
+[17] "else"                             "if (accel_belt_z <= 17.5)"       
+[19] "if (magnet_belt_x <= 43)"         "Result <- B"                     
+
+> modRF
+
+Call:
+ randomForest(formula = factor(classe) ~ ., data = mytrainraw,      importance = TRUE, do.trace = 100) 
+               Type of random forest: classification
+                     Number of trees: 500
+No. of variables tried at each split: 6
+
+        OOB estimate of  error rate: 0.64%
+Confusion matrix:
+     A    B    C    D    E  class.error
+A 3346    2    0    0    0 0.0005973716
+B   12 2261    6    0    0 0.0078982010
+C    0   17 2032    5    0 0.0107108082
+D    0    0   23 1906    1 0.0124352332
+E    0    0    2    7 2156 0.0041570439
+
+Relative Importance in the group of the six consistent top variables according to MeanDecreaseAccuracy for the five randomForests models with varying samples in the datasets.
+
+Run1 MeanDecreaseAccuracy - yaw_belt(0.199), roll_belt(0.172), pitch_belt(0.176), magnet_dumbbell_z(0.171), pitch_forearm(0.133), magnet_dumbbell_y(0.149)
+Run2 MeanDecreaseAccuracy - yaw_belt(0.198), roll_belt(0.174), pitch_belt(0.175), magnet_dumbbell_z(0.171), magnet_dumbbell_y(0.149), pitch_forearm(0.132)
+Run3 MeanDecreaseAccuracy - yaw_belt(0.199), roll_belt(0.173), magnet_dumbbell_z(0.169), pitch_belt(0.176), magnet_dumbbell_y(0.149), pitch_forearm(0.132), ...
+Run4 MeanDecreaseAccuracy - yaw_belt(0.196), roll_belt(0.173), pitch_belt(0.175), magnet_dumbbell_z(0.173), magnet_dumbbell_y(0.153), pitch_forearm(0.131),...
+Run5 MeanDecreaseAccuracy - yaw_belt(0.199), roll_belt(0.175), magnet_dumbbell_z(0.169), pitch_belt(0.178), magnet_dumbbell_y(0.149), pitch_forearm(0.130),...
+
+> OOS_errRateRF
+[1] 0.006500127
+
+> predBlind
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+------------------------------------------------------------------------
+All test run results on 20 blinded samples and out of sample error rates
+PROJECT RESULTS
+predknn: [1] B A C A A B D B A A D C B A E E A B B B
+ predRF: [1] B A B A A E D B A A B C B A E E A B B B
+predBlind run1
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+> predBlind run2
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+> predBlind run3
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+> predBlind run4
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+> predBlind run 5
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+ B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+
+out of sample error predknn     [1] 0.04703033
+out of sample error predRF      [1] 0.005990314
+out of sample error predRF run1 [1] 0.009176651
+out of sample error predRF run2 [1] 0.0054805
+out of sample error predRF run3 [1] 0.006372674
+out of sample error predRF run4 [1] 0.006755034
+out of sample error predRF run5 [1] 0.006500127
+
+average out of sample error from test set = 0.0068569972
+average out of box error from training set = 0.00702
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

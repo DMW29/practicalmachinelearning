@@ -1,0 +1,49 @@
+---
+title: "Practical Machine Learning Prediction Assignment"
+author: "DMWaterson"
+date: "March 19, 2016"
+output: html_document
+---
+
+### Introduction
+One thing that people regularly do is quantify how much of a particular activity
+they do, but they rarely quantify how well they do it. In this project, data 
+from accelerometers on the belt, forearm, arm, and dumbell of six participants
+will be used create a model to predict whether the exercise is being done 
+correctly or incorrectly in one of four possible ways.
+
+### Natural Error Rate
+The probability of perfect classification is approximately: (1/5)^sample size. 
+So, when n = 1, the probability of 100% accuracy is 20%. When n = 2, the 
+probability of 100% accuracy is 4%. When n = 10, then the probability of 100% 
+accuracy is $10^{-7}$. So, with a larger sample there is a smaller probability 
+of high accuracy. Therefore, there is a higher probability the model is indeed 
+accurate and not just random. This is the prediction goal.
+
+### Data Processing
+The data for this assignment come from [this source](http://groupware.les.inf.puc-rio.br/har). The training dataset is downloaded from [here](http://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv). The
+blind test set is downloaded from [here](http://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv). The
+training dataset is split into a training set and a test set for building the prediction model. The split percentages are 60% and 40%, respectively. The choice of variables to include in the model are those that are most closely related to the outcome. This is done because the relationship of indirectly related variables to the outcome can change over time.  With this dataset the most closely related also provide for the largest sample size to help with variance reduction. Therefore, variables that are summary statistics are excluded. Because of the additional complexity of model building with time factors, time variables are also excluded with the intent of reintroducing them if an acceptable model cannot be found. Amplitude variables such as amplitude_roll_belt, amplitude_roll_arm, etc., include 98% to 100% missing observations and also are excluded for model building. The resulting datasets include 49 predictor variables with the number of observations as described below.
+
+Variable Count|Training Set|Testing Set
+--------------|------------|-----------
+   49         |   11776    |   7846           
+
+### Data Exploration
+The range of values for the 49 variables varies widely. For example, while roll,
+pitch and yaw values range roughly between -100 and 100, most gyros variables 
+range between roughly -3 and 3. Distributions on the gyros variables are also 
+highly skewed. Further still, magnet variables can range from -1000 to 1000 and 
+can have the effect of overwhelming the analysis to choose in favor of highest variance variables. No variables have near zero variance. There are 15 highly correlated variables that will have the effect of variance inflation. However,
+based on [this article](http://blog.explainmydata.com/2012/07/should-you-apply-pca-to-your-data.html), no variable transformations are done. However, transformation
+options will be revisited if an acceptable model is not found.
+
+### Train the model
+The Random Forests algorithm is used to pick variables and the prediction 
+function. It is assumed data collection costs are low and interpretability is not a requirement. When data collection costs are high, the number of variables in the final model should be at a minumum. Interpetability can influence algorithm choice. For example, rpart() will result in an interpretable tree, however, randomForests() will not.
+
+OOB estimate of error rate as a measure of OOS estimate
+Importance vs ntree = 500 first 20 nodes
+Further possible tuning to better capture classes C and D.
+Incorrectly performed dumbbell bicept curls can be predicted with a high accuracy rate. Not only can dumbbell curls be determined as incorrect, they can be classified into the type of incorrectness. Further study can include other types of exercise feedback. In this case, machine learning must be able to identify the exercise being performed and then classify it into a correctness category to provide correct/incorrect feedback. Also, understanding the most important features by classification category could then be used to provide feedback to the user on how the exercise is being performed so they can correct their exercise form. It is true that injury is more prone to novice exercisers who perform exercise repeatedly and incorrectly. This is also true with heavy weights. [Gov.UK Health and Social Care Information Centre (HSCIC)](http://www.nhs.uk/Livewell/fitness/Pages/Top-10-gym-exercises-done-incorrectly.aspx)
+
