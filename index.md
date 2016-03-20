@@ -1,11 +1,6 @@
----
-title: "Practical Machine Learning Course Project"
-author: "DMWaterson"
-date: "March 19, 2016"
-output: 
-  html_document: 
-    keep_md: yes
----
+# Practical Machine Learning Course Project
+DMWaterson  
+March 19, 2016  
 
 ### Introduction
 One thing that people regularly do is quantify how much of a particular activity
@@ -44,7 +39,8 @@ function. It is assumed data collection costs are low and interpretability is no
 
 ### Test the model
 The Random Forests algorithm was run 5 times on a different set of training data each time as a type of cross-validation to obtain an estimate of the out-of-sample (OOS) error. This is accomplished by splitting the dataset into training and testing sets for each run and then setting the seed for the algorithm. The code for data partitioning, model training and calculating OOS follows.
-```{r rf algorithm, eval=FALSE}
+
+```r
 ## Split the original training dataset to create new training and testing sets for model building
 library(caret)
 data <- data.frame(training)
@@ -96,7 +92,8 @@ magnet_dumbbell_y |0.1498
 pitch_forearm     |0.1316
 
 This is the code to calculate the relative importance of the top six variables consistantly reported for each of five training runs. Please reference [this website](http://stats.stackexchange.com/questions/92419/relative-importance-of-a-set-of-predictors-in-a-random-forests-classification-in/92843) for the code and a nice explanation of Gini importance.
-```{r top6, eval=FALSE}
+
+```r
 ## Calculate group relative importance
 var.share <- function(rf.obj, members) {
         count <- table(rf.obj$forest$bestvar)[-1]
